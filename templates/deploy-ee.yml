@@ -93,7 +93,7 @@ steps:
         cd exec-env/${{ EE }}
         pwd 
         [[ ! -d ./context ]] && mkdir context
-        cp /etc/pki/rpm-gpg/* ./context/
+#        cp /etc/pki/rpm-gpg/* ./context/
 #        ansible-builder build --tag ${{ EE }}-$(ANSIBLE_VERSION):$(Build.SourceVersion) --container-runtime podman -v 3 --no-cache --prune-image
 #        podman login -u $(AUTOMATION_HUB_USER) -p $(AUTOMATION_HUB_PASS) $(AUTOMATION_HUB_FQDN) --tls-verify=False
 #        podman tag ${{ EE }}-$(ANSIBLE_VERSION):$(Build.SourceVersion) $(AUTOMATION_HUB_FQDN)/${{ EE }}-$(ANSIBLE_VERSION):$(Build.SourceVersion)
