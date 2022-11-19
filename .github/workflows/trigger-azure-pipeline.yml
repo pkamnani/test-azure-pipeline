@@ -4,17 +4,16 @@ on:
   push:
     branches:
       - development
-    types: [synchronize, closed]
+    types: [synchronize]
   pull_request:
     branches: 
       - main
-    types: [synchronize, closed]
+    types: [synchronize]
 
 jobs:
     build:
         name: Call Azure Pipeline
         runs-on: ubuntu-latest
-        if: github.event.pull_request.merged == true
         steps:
         - name: Azure Pipelines Action
           uses: Azure/pipelines@v1
