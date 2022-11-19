@@ -4,11 +4,12 @@ on:
   push:
     branches:
     - "development"
-    - "!main"
+    - "main"
 
   pull_request:
     branches:
     - main
+    - development
     types: [opened, synchronize, closed]
 
 jobs:
