@@ -93,20 +93,16 @@ steps:
         cd exec-env/${{ EE }}
         pwd 
         [[ ! -d ./context ]] && mkdir context
-        cp /etc/pki/rpm-gpg/* ./context/
-        ansible-builder build --tag ${{ EE }}-$(ANSIBLE_VERSION):$(Build.SourceVersion) --container-runtime podman -v 3 --no-cache --prune-image
-        podman login -u $(AUTOMATION_HUB_USER) -p $(AUTOMATION_HUB_PASS) $(AUTOMATION_HUB_FQDN) --tls-verify=False
-        podman tag ${{ EE }}-$(ANSIBLE_VERSION):$(Build.SourceVersion) $(AUTOMATION_HUB_FQDN)/${{ EE }}-$(ANSIBLE_VERSION):$(Build.SourceVersion)
-        podman tag ${{ EE }}-$(ANSIBLE_VERSION):$(Build.SourceVersion) $(AUTOMATION_HUB_FQDN)/${{ EE }}-$(ANSIBLE_VERSION):latest
-        podman push $(AUTOMATION_HUB_FQDN)/${{ EE }}-$(ANSIBLE_VERSION):$(Build.SourceVersion) --tls-verify=False
-        podman push $(AUTOMATION_HUB_FQDN)/${{ EE }}-$(ANSIBLE_VERSION):latest --tls-verify=False
-        echo "#############################################################"
-        echo "## Performing Cleanup"
-        echo "#############################################################"
-        for i in `podman images | grep a1lab-pk | awk {'print $3'}`; do podman rmi $i -f; done
-        for i in `podman images | grep none | awk {'print $3'}`; do podman rmi $i -f; done
+#        cp /etc/pki/rpm-gpg/* ./context/
+#        ansible-builder build --tag ${{ EE }}-$(ANSIBLE_VERSION):$(Build.SourceVersion) --container-runtime podman -v 3 --no-cache --prune-image
+#        podman login -u $(AUTOMATION_HUB_USER) -p $(AUTOMATION_HUB_PASS) $(AUTOMATION_HUB_FQDN) --tls-verify=False
+#        podman tag ${{ EE }}-$(ANSIBLE_VERSION):$(Build.SourceVersion) $(AUTOMATION_HUB_FQDN)/${{ EE }}-$(ANSIBLE_VERSION):$(Build.SourceVersion)
+#        podman tag ${{ EE }}-$(ANSIBLE_VERSION):$(Build.SourceVersion) $(AUTOMATION_HUB_FQDN)/${{ EE }}-$(ANSIBLE_VERSION):latest
+#        podman push $(AUTOMATION_HUB_FQDN)/${{ EE }}-$(ANSIBLE_VERSION):$(Build.SourceVersion) --tls-verify=False
+#        podman push $(AUTOMATION_HUB_FQDN)/${{ EE }}-$(ANSIBLE_VERSION):latest --tls-verify=False
+#        echo "#############################################################"
+#        echo "## Performing Cleanup"
+#        echo "#############################################################"
+#        for i in `podman images | grep a1lab-pk | awk {'print $3'}`; do podman rmi $i -f; done
+#        for i in `podman images | grep none | awk {'print $3'}`; do podman rmi $i -f; done
 
-
-#podman login registry.redhat.io (use nextdc_rhsm)
-#podman pull registry.redhat.io/ansible-automation-platform-22/supported-rhel8:latest
-#podman tag registry.redhat.io/ansible-automation-platform-22/supported-rhel8:latest FQDN_OF_HUB/linux-2.13
