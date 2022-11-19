@@ -1,0 +1,9 @@
+---
+collections:
+  - name: awx.awx
+  - name: community.vmware
+  - name: vmware.vmware_rest 
+  - name: community.general
+  - name: vmware.vmware_rest 
+  - name: redhat.satellite
+  - name: redhat.insights

@@ -1,0 +1,12 @@
+# File: ansible-lint.yml
+steps:
+  - task: Bash@3
+    inputs:
+      targetType: script
+      script: | 
+        python -m pip install --upgrade pip setuptools wheel
+        python -m pip install ansible-lint
+        echo "========== scanning directory with ansible-lint =========="
+        ansible-lint --force-color *.yml
+        echo "========== scanning directory completed =========="
+        
