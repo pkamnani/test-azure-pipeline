@@ -1,0 +1,100 @@
+# File: azure-pipelines.yml
+
+trigger:
+  branches:
+    include:
+      - main
+      - development
+
+pr:
+  branches:
+    include:
+      - main
+      - development
+
+variables:
+- name: system.denbug
+  value: true
+
+- name: Agent.Source.Git.ShallowFetchDepth
+  value: 5
+
+- group: "Ansible EE and Roles Pipeline Variables Group"
+  
+- name: ANSIBLE_VERSION
+  value: 2.13
+
+- name: TargetAgentPool
+  ${{ if eq(variables['Build.SourceBranchName'], 'development') }}:
+    value: 'ansible-adoa-prod'
+  ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
+    value: 'ansible-adoa-prod'
+
+- name: AUTOMATION_HUB_FQDN
+  ${{ if eq(variables['Build.SourceBranchName'], 'development') }}:
+    value: $(DEV_HUB_FQDN)
+  ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
+    value: $(PROD_HUB_FQDN)
+
+- name: AUTOMATION_HUB_USER
+  ${{ if eq(variables['Build.SourceBranchName'], 'development') }}:
+    value: $(DEV_HUB_USER)
+  ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
+    value: $(PROD_HUB_USER)
+
+- name: AUTOMATION_HUB_PASS
+  ${{ if eq(variables['Build.SourceBranchName'], 'development') }}:
+    value: $(DEV_HUB_PASS)
+  ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
+    value: $(PROD_HUB_PASS)
+
+- name: AUTOMATION_HUB_KEY
+  ${{ if eq(variables['Build.SourceBranchName'], 'development') }}:
+    value: $(DEV_HUB_KEY)
+  ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
+    value: $(PROD_HUB_KEY)
+
+stages:
+  - stage: ValidateAnsibleCode
+    displayName: ValidateAnsibleCode
+    jobs:
+      - job: ValidateAnsibleCode
+        pool: $(TargetAgentPool)
+        steps:
+        - template: templates/ansible-lint.yml
+
+  - stage: EE_TEST_BuildAndDeploy
+    displayName: EE_TEST_BuildAndDeploy
+    dependsOn: 
+      - ValidateAnsibleCode
+    condition: and(succeeded(), eq(variables['Build.SourceBranchName'], 'development'))
+    jobs:
+      - deployment: EE_TEST_BuildAndDeploy
+        displayName: EE_TEST_BuildAndDeploy
+        pool: $(TargetAgentPool)
+        environment: TEST-a1lab-pk-aah01
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - template: templates/deploy-ee.yml
+
+  - stage: EE_PROD_BuildAndDeploy
+    displayName: EE_PROD_BuildAndDeploy
+    dependsOn: 
+      - ValidateAnsibleCode
+      - EE_TEST_BuildAndDeploy
+    condition: and(succeeded(), eq(variables['Build.SourceBranchName'], 'main'))
+    jobs:
+      - deployment: EE_PROD_BuildAndDeploy
+        displayName: EE_PROD_BuildAndDeploy
+        pool: $(TargetAgentPool)
+        environment: PROD-a1lab-pk-aah01
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - template: templates/deploy-ee.yml
+
+    
+  
