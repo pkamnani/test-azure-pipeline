@@ -3,7 +3,7 @@ name: CI to Trigger Azure DevOps Pipeline
 on:
   push:
     branches:
-    - "**"
+    - "development"
     - "!main"
 
   pull_request:
