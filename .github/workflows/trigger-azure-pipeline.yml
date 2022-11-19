@@ -1,23 +1,32 @@
 name: CI to Trigger Azure DevOps Pipeline
 
-
 on:
   push:
     branches:
       - main
       - development
-    types: [opened, synchronize, closed]
   pull_request:
-    branches:
+    branches: 
       - main
       - development
-    types: [opened, synchronize, closed]
+
+# on:
+#   push:
+#     branches:
+#       - main
+#       - development
+#     types: [opened, synchronize, closed]
+#   pull_request:
+#     branches:
+#       - main
+#       - development
+#     types: [opened, synchronize, closed]
 
 jobs:
     build:
         name: Call Azure Pipeline
         runs-on: ubuntu-latest
-        if: github.event.pull_request.merged == true
+#        if: github.event.pull_request.merged == true
         steps:
         - name: Azure Pipelines Action
           uses: Azure/pipelines@v1
