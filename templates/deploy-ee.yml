@@ -9,10 +9,10 @@ parameters:
     # - ee-azure
     # - ee-windows
     # - ee-network-cisco
-    - ee-network-juniper
-    - ee-satellite
-    - ee-vmware-satellite
-    - ee-vmware
+    # - ee-network-juniper
+    # - ee-satellite
+    # - ee-vmware-satellite
+    # - ee-vmware
     #  - ee-solaris
 
 steps:
