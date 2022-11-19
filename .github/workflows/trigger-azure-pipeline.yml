@@ -1,0 +1,24 @@
+name: CI to Trigger Azure DevOps Pipeline
+
+# Run this workflow every time a commit gets pushed to main or a pull request gets opened against main
+on:
+  push:
+    branches:
+      - main
+      - development
+  pull_request:
+    branches: 
+      - main
+      - development
+
+jobs:
+    build:
+        name: Call Azure Pipeline
+        runs-on: ubuntu-latest
+        steps:
+        - name: Azure Pipelines Action
+          uses: Azure/pipelines@v1
+          with:
+            azure-devops-project-url: https://dev.azure.com/PKamnani/pk-devops-aap-ee
+            azure-pipeline-name: 'pkamnani.test-azure-pipeline'
+            azure-devops-token: ${{ secrets.AZURE_DEVOPS_TOKEN }}
