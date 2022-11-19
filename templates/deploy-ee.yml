@@ -100,9 +100,9 @@ steps:
 #        podman tag ${{ EE }}-$(ANSIBLE_VERSION):$(Build.SourceVersion) $(AUTOMATION_HUB_FQDN)/${{ EE }}-$(ANSIBLE_VERSION):latest
 #        podman push $(AUTOMATION_HUB_FQDN)/${{ EE }}-$(ANSIBLE_VERSION):$(Build.SourceVersion) --tls-verify=False
 #        podman push $(AUTOMATION_HUB_FQDN)/${{ EE }}-$(ANSIBLE_VERSION):latest --tls-verify=False
-        echo "#############################################################"
-        echo "## Performing Cleanup"
-        echo "#############################################################"
-        for i in `podman images | grep a1lab-pk | awk {'print $3'}`; do podman rmi $i -f; done
-        for i in `podman images | grep none | awk {'print $3'}`; do podman rmi $i -f; done
+#        echo "#############################################################"
+#        echo "## Performing Cleanup"
+#        echo "#############################################################"
+#        for i in `podman images | grep a1lab-pk | awk {'print $3'}`; do podman rmi $i -f; done
+#        for i in `podman images | grep none | awk {'print $3'}`; do podman rmi $i -f; done
 
