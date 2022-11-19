@@ -6,11 +6,11 @@ trigger:
       - main
       - development
 
-pr:
-  branches:
-    include:
-      - main
-      - development
+# pr:
+#   branches:
+#     include:
+#       - main
+#       - development
 
 variables:
 - name: system.denbug
