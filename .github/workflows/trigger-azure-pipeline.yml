@@ -1,11 +1,12 @@
 name: CI to Trigger Azure DevOps Pipeline
 
 
-pull_request:
-  branches:
-  - main
-  - development
-  types: [opened, synchronize, closed]
+on:
+  pull_request:
+    branches:
+    - main
+    - development
+    types: [opened, synchronize, closed]
 
 jobs:
     build:
