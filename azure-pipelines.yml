@@ -67,7 +67,7 @@ stages:
     displayName: EE_TEST_BuildAndDeploy
     dependsOn: 
       - ValidateAnsibleCode
-    condition: and(succeeded(), eq(variables['Build.SourceBranchName'], 'development'))
+    condition: eq(variables['Build.SourceBranchName'], 'development'))
     jobs:
       - deployment: EE_TEST_BuildAndDeploy
         displayName: EE_TEST_BuildAndDeploy
@@ -84,7 +84,7 @@ stages:
     dependsOn: 
       - ValidateAnsibleCode
       - EE_TEST_BuildAndDeploy
-    condition: and(succeeded(), eq(variables['Build.SourceBranchName'], 'main'))
+    condition: eq(variables['Build.SourceBranchName'], 'main'))
     jobs:
       - deployment: EE_PROD_BuildAndDeploy
         displayName: EE_PROD_BuildAndDeploy
