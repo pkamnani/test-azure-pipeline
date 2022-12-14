@@ -6,7 +6,7 @@ parameters:
     - ee-default
     - ee-linux
     # - ee-aws
-    # - ee-azure
+    - ee-azure
     # - ee-windows
     # - ee-network-cisco
     # - ee-network-juniper
