@@ -6,7 +6,7 @@ build_arg_defaults:
 ansible_config: '../../ansible.cfg'
 dependencies:
   galaxy: requirements.yml
-  python: requirements.txt
+  #python: requirements.txt
 additional_build_steps:
   prepend: |
     COPY RPM-GPG-KEY* /etc/pki/rpm-gpg/
