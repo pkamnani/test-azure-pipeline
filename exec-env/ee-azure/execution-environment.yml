@@ -7,8 +7,3 @@ ansible_config: '../../ansible.cfg'
 dependencies:
   galaxy: requirements.yml
   #python: requirements.txt
-additional_build_steps:
-  prepend: |
-    COPY RPM-GPG-KEY* /etc/pki/rpm-gpg/
-    RUN rpm --import /etc/pki/rpm-gpg/*
-  append: |
