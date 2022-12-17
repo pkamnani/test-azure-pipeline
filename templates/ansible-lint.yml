@@ -6,8 +6,10 @@ steps:
       script: |
         set -e
         python -m pip install --upgrade pip setuptools wheel
-        python -m pip install ansible-lint
+        # python -m pip install ansible-lint
+        python3 -m pip install --user yamllint
         echo "========== scanning directory with ansible-lint =========="
-        ansible-lint --force-color *.yml
+        # ansible-lint --force-color *.yml
+        yamllint -f colored .
         echo "========== scanning directory completed =========="
         
