@@ -1,3 +1,4 @@
+---
 # File: ansible-lint.yml
 steps:
   - task: Bash@3
@@ -12,4 +13,3 @@ steps:
         # ansible-lint --force-color *.yml
         yamllint -f colored .
         echo "========== scanning directory completed =========="
-        

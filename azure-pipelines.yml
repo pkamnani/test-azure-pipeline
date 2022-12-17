@@ -1,5 +1,5 @@
 # File: azure-pipelines.yml
-
+---
 trigger:
   branches:
     include:
@@ -7,46 +7,46 @@ trigger:
       - development
 
 variables:
-- name: system.denbug
-  value: true
+  - name: system.denbug
+    value: true
 
-- name: Agent.Source.Git.ShallowFetchDepth
-  value: 5
+  - name: Agent.Source.Git.ShallowFetchDepth
+    value: 5
 
-- group: "Ansible EE and Roles Pipeline Variables Group"
-  
-- name: ANSIBLE_VERSION
-  value: 2.13
+  - group: "Ansible EE and Roles Pipeline Variables Group"
 
-- name: TargetAgentPool
-  ${{ if eq(variables['Build.SourceBranchName'], 'development') }}:
-    value: 'ansible-adoa-prod'
-  ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
-    value: 'ansible-adoa-prod'
+  - name: ANSIBLE_VERSION
+    value: 2.13
 
-- name: AUTOMATION_HUB_FQDN
-  ${{ if eq(variables['Build.SourceBranchName'], 'development') }}:
-    value: $(DEV_HUB_FQDN)
-  ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
-    value: $(PROD_HUB_FQDN)
+  - name: TargetAgentPool
+    ${{ if eq(variables['Build.SourceBranchName'], 'development') }}:
+      value: 'ansible-adoa-prod'
+    ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
+      value: 'ansible-adoa-prod'
 
-- name: AUTOMATION_HUB_USER
-  ${{ if eq(variables['Build.SourceBranchName'], 'development') }}:
-    value: $(DEV_HUB_USER)
-  ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
-    value: $(PROD_HUB_USER)
+  - name: AUTOMATION_HUB_FQDN
+    ${{ if eq(variables['Build.SourceBranchName'], 'development') }}:
+      value: $(DEV_HUB_FQDN)
+    ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
+      value: $(PROD_HUB_FQDN)
 
-- name: AUTOMATION_HUB_PASS
-  ${{ if eq(variables['Build.SourceBranchName'], 'development') }}:
-    value: $(DEV_HUB_PASS)
-  ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
-    value: $(PROD_HUB_PASS)
+  - name: AUTOMATION_HUB_USER
+    ${{ if eq(variables['Build.SourceBranchName'], 'development') }}:
+      value: $(DEV_HUB_USER)
+    ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
+      value: $(PROD_HUB_USER)
 
-- name: AUTOMATION_HUB_KEY
-  ${{ if eq(variables['Build.SourceBranchName'], 'development') }}:
-    value: $(DEV_HUB_KEY)
-  ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
-    value: $(PROD_HUB_KEY)
+  - name: AUTOMATION_HUB_PASS
+    ${{ if eq(variables['Build.SourceBranchName'], 'development') }}:
+      value: $(DEV_HUB_PASS)
+    ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
+      value: $(PROD_HUB_PASS)
+
+  - name: AUTOMATION_HUB_KEY
+    ${{ if eq(variables['Build.SourceBranchName'], 'development') }}:
+      value: $(DEV_HUB_KEY)
+    ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
+      value: $(PROD_HUB_KEY)
 
 stages:
   - stage: ValidateAnsibleCode
@@ -55,11 +55,11 @@ stages:
       - job: ValidateAnsibleCode
         pool: $(TargetAgentPool)
         steps:
-        - template: templates/ansible-lint.yml
+          - template: templates/ansible-lint.yml
 
   - stage: EE_TEST_BuildAndDeploy
     displayName: EE_TEST_BuildAndDeploy
-    dependsOn: 
+    dependsOn:
       - ValidateAnsibleCode
     condition: eq(variables['Build.SourceBranchName'], 'development')
     jobs:
@@ -75,7 +75,7 @@ stages:
 
   - stage: EE_PROD_BuildAndDeploy
     displayName: EE_PROD_BuildAndDeploy
-    dependsOn: 
+    dependsOn:
       - ValidateAnsibleCode
       - EE_TEST_BuildAndDeploy
     condition: eq(variables['Build.SourceBranchName'], 'main')
@@ -89,6 +89,3 @@ stages:
             deploy:
               steps:
                 - template: templates/deploy-ee.yml
-
-    
-  
