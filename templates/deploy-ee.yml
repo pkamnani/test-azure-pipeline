@@ -105,5 +105,5 @@ steps:
             echo "#############################################################"
             echo "## Performing Cleanup"
             echo "#############################################################"
-            for i in `podman images | grep a1lab-pk | awk {'print $3'}`; do podman rmi $i -f; done
-            for i in `podman images | grep none | awk {'print $3'}`; do podman rmi $i -f; done
+            for i in `podman images | grep a1lab-pk | awk {'print $3'}`; do podman rmi $i -f; done || true
+            for i in `podman images | grep none | awk {'print $3'}`; do podman rmi $i -f; done || true
