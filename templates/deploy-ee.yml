@@ -4,7 +4,7 @@ parameters:
   - name: EE_LIST
     type: object
     default:
-      - ee-default
+      # - ee-default
       - ee-linux
       # - ee-aws
       # - ee-azure
