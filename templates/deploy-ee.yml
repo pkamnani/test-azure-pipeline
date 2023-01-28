@@ -6,14 +6,14 @@ parameters:
     default:
       - ee-default
       - ee-linux
-      - ee-aws
-      - ee-azure
+      # - ee-aws
+      # - ee-azure
       # - ee-windows
-      - ee-network-cisco
+      # - ee-network-cisco
       # - ee-network-juniper
-      - ee-satellite
-      - ee-vmware-satellite
-      - ee-vmware
+      # - ee-satellite
+      # - ee-vmware-satellite
+      # - ee-vmware
       #  - ee-solaris
 
 steps:
