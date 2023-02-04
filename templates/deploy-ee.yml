@@ -70,7 +70,7 @@ steps:
   - ${{ each EE in parameters.EE_LIST }}:
       - task: PowerShell@2
         displayName: "${{ EE }}_CheckingOnPAH"
-        condition: eq(variables['rootFolderChangesFound'], 'Yes')
+        condition: eq(variables['rootFolderChangesFound'], 'No')
         inputs:
           targetType: 'inline'
           script: |
@@ -92,7 +92,7 @@ steps:
 
       - task: PowerShell@2
         displayName: "${{ EE }}_CheckingChangedFiles"
-        condition: eq(variables['rootFolderChangesFound'], 'Yes')
+        condition: eq(variables['rootFolderChangesFound'], 'No')
         inputs:
           targetType: 'inline'
           script: |
@@ -123,10 +123,6 @@ steps:
           targetType: script
           script: |
             set -e
-            echo "Changes found in root folder = $(rootFolderChangesFound)"
-            echo "EE already exist on PAH = $(execEnvBuild)"
-            echo "Changes found in EE configs = $(execEnvFolderChangesFound)"
-            echo ""
             echo "#############################################################"
             echo "## Starting build of EE ${{ EE }} on $(AUTOMATION_HUB_FQDN)"
             echo "#############################################################"
