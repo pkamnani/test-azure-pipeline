@@ -43,7 +43,7 @@ steps:
         cat ansible.cfg
 
   - task: PowerShell@2
-    displayName: "CheckingChangedFiles_Root"
+    displayName: "root_CheckingChangedFiles"
     inputs:
       targetType: 'inline'
       script: |
