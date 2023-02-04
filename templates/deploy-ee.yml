@@ -24,7 +24,7 @@ steps:
       script: |
         set -e
         echo "#############################################################"
-        echo "## Processing ${{ EE }} on $(AUTOMATION_HUB_FQDN)"
+        echo "## Starting process on $(AUTOMATION_HUB_FQDN)"
         echo "#############################################################"
         cat <<EOF > ansible.cfg
         [galaxy]
@@ -119,6 +119,9 @@ steps:
           targetType: script
           script: |
             set -e
+            echo "#############################################################"
+            echo "## Starting build of EE ${{ EE }} on $(AUTOMATION_HUB_FQDN)"
+            echo "#############################################################"
             podman login -u "$(CI_RHN_USER)" -p "$(CI_RHN_PASSWORD)" registry.redhat.io
             cd exec-env/${{ EE }}
             pwd
