@@ -14,9 +14,34 @@ parameters:
       # - ee-satellite
       # - ee-vmware-satellite
       # - ee-vmware
-      #  - ee-solaris
+      # - ee-solaris
 
 steps:
+  - task: Bash@3
+    displayName: "Setup_ansible.cfg_file"
+    inputs:
+      targetType: script
+      script: |
+        set -e
+        echo "#############################################################"
+        echo "## Processing ${{ EE }} on $(AUTOMATION_HUB_FQDN)"
+        echo "#############################################################"
+        cat <<EOF > ansible.cfg
+        [galaxy]
+        server_list = published_repo, rh-certified_repo, community_repo
+        ignore_certs = yes
+        [galaxy_server.community_repo]
+        url=https://$(AUTOMATION_HUB_FQDN)/api/galaxy/content/community/
+        token=$(echo $AUTOMATION_HUB_KEY)
+        [galaxy_server.published_repo]
+        url=https://$(AUTOMATION_HUB_FQDN)/api/galaxy/content/published/
+        token=$(echo $AUTOMATION_HUB_KEY)
+        [galaxy_server.rh-certified_repo]
+        url=https://$(AUTOMATION_HUB_FQDN)/api/galaxy/content/rh-certified/
+        token=$(echo $AUTOMATION_HUB_KEY)
+        EOF
+        cat ansible.cfg
+
   - task: PowerShell@2
     displayName: "CheckingChangedFiles_in_Root"
     inputs:
@@ -43,6 +68,27 @@ steps:
 
   - ${{ each EE in parameters.EE_LIST }}:
       - task: PowerShell@2
+        displayName: "Checking_${{ EE }}_On_PAH"
+        inputs:
+          targetType: 'inline'
+          script: |
+            podman login -u $(AUTOMATION_HUB_USER) -p $(AUTOMATION_HUB_PASS) $(AUTOMATION_HUB_FQDN) --tls-verify=False
+            podman pull $(AUTOMATION_HUB_FQDN)/${{ EE }}-$(ANSIBLE_VERSION) --tls-verify=False
+            $check=echo $?
+            if ('$check -eq 'False')
+            {
+              echo "Target ${{ EE }} not found on $(AUTOMATION_HUB_FQDN)"
+              echo "This function is triggered to build EE for exec-env/${{ EE }}"
+              Write-Host "##vso[task.setvariable variable=execEnvBuild]Yes"
+              break
+            }
+            else
+            {
+              Write-Host "##vso[task.setvariable variable=execEnvBuild]No"
+              podman rmi podman rmi a1lab-pk-aah01.lab.a1ms.cloud/ee-aws-2.13
+            }
+
+      - task: PowerShell@2
         displayName: "CheckingChangedFiles_${{ EE }}"
         inputs:
           targetType: 'inline'
@@ -68,29 +114,11 @@ steps:
 
       - task: Bash@3
         displayName: "Build_EE_${{ EE }}"
-        condition: or(eq(variables['rootFolderChangesFound'], 'Yes'),eq(variables['execEnvFolderChangesFound'], 'Yes'))
+        condition: or(eq(variables['rootFolderChangesFound'], 'Yes'),eq(variables['execEnvFolderChangesFound'], 'Yes'),eq(variables['execEnvBuild'], 'Yes'))
         inputs:
           targetType: script
           script: |
             set -e
-            echo "#############################################################"
-            echo "## Processing ${{ EE }} on $(AUTOMATION_HUB_FQDN)"
-            echo "#############################################################"
-            cat <<EOF > ansible.cfg
-            [galaxy]
-            server_list = published_repo, rh-certified_repo, community_repo
-            ignore_certs = yes
-            [galaxy_server.community_repo]
-            url=https://$(AUTOMATION_HUB_FQDN)/api/galaxy/content/community/
-            token=$(echo $AUTOMATION_HUB_KEY)
-            [galaxy_server.published_repo]
-            url=https://$(AUTOMATION_HUB_FQDN)/api/galaxy/content/published/
-            token=$(echo $AUTOMATION_HUB_KEY)
-            [galaxy_server.rh-certified_repo]
-            url=https://$(AUTOMATION_HUB_FQDN)/api/galaxy/content/rh-certified/
-            token=$(echo $AUTOMATION_HUB_KEY)
-            EOF
-            cat ansible.cfg
             podman login -u "$(CI_RHN_USER)" -p "$(CI_RHN_PASSWORD)" registry.redhat.io
             cd exec-env/${{ EE }}
             pwd
@@ -105,5 +133,5 @@ steps:
             echo "#############################################################"
             echo "## Performing Cleanup"
             echo "#############################################################"
-            for i in `podman images | grep a1lab-pk | awk {'print $3'}`; do podman rmi $i -f; done || true
+            for i in `podman images | grep $(AUTOMATION_HUB_FQDN) | awk {'print $3'}`; do podman rmi $i -f; done || true
             for i in `podman images | grep none | awk {'print $3'}`; do podman rmi $i -f; done || true
