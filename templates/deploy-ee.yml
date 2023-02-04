@@ -78,18 +78,16 @@ steps:
             podman login -u $(AUTOMATION_HUB_USER) -p $(AUTOMATION_HUB_PASS) $(AUTOMATION_HUB_FQDN) --tls-verify=False
             podman pull $(AUTOMATION_HUB_FQDN)/${{ EE }}-$(ANSIBLE_VERSION) --tls-verify=False
             $check=echo $?
-            echo $check
             if ($check -match 'False')
             {
-              echo "Target ${{ EE }} not found on $(AUTOMATION_HUB_FQDN)"
-              echo "This function is triggered to build EE for exec-env/${{ EE }}"
+              echo "Target ${{ EE }} not found on $(AUTOMATION_HUB_FQDN). The image ${{ EE }} will be built"
               Write-Host "##vso[task.setvariable variable=execEnvBuild]Yes"
               break
             }
             else
             {
+              echo "Target ${{ EE }} found on $(AUTOMATION_HUB_FQDN). The image ${{ EE }} will not be built unless there is no config change within image templates.
               Write-Host "##vso[task.setvariable variable=execEnvBuild]No"
-              podman rmi podman rmi a1lab-pk-aah01.lab.a1ms.cloud/ee-aws-2.13
             }
 
       - task: PowerShell@2
