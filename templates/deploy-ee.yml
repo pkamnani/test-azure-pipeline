@@ -57,12 +57,13 @@ steps:
           if ($name -like '*deploy-ee.yml*')
           {
             Write-Host "##vso[task.setvariable variable=rootFolderChangesFound]Yes"
-            echo "Change detected in main deployment script."
+            echo "Change detected in the root of the EE pipleine folder"
             echo "This function is triggered to build All EE"
             break
           }
           else
           {
+            echo "No change detected in the root of the EE pipleine folder"
             Write-Host "##vso[task.setvariable variable=rootFolderChangesFound]No"
           }
         }
@@ -112,6 +113,7 @@ steps:
               }
               else
               {
+                echo "No change detected in exec-env/${{ EE }} configuration files."
                 Write-Host "##vso[task.setvariable variable=execEnvFolderChangesFound]No"
               }
             }
