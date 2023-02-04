@@ -70,6 +70,7 @@ steps:
   - ${{ each EE in parameters.EE_LIST }}:
       - task: PowerShell@2
         displayName: "${{ EE }}_CheckingOnPAH"
+        condition: eq(variables['rootFolderChangesFound'], 'Yes')
         inputs:
           targetType: 'inline'
           script: |
@@ -77,6 +78,7 @@ steps:
             podman login -u $(AUTOMATION_HUB_USER) -p $(AUTOMATION_HUB_PASS) $(AUTOMATION_HUB_FQDN) --tls-verify=False
             podman pull $(AUTOMATION_HUB_FQDN)/${{ EE }}-$(ANSIBLE_VERSION) --tls-verify=False
             $check=echo $?
+            echo $check
             if ($check -eq 'False')
             {
               echo "Target ${{ EE }} not found on $(AUTOMATION_HUB_FQDN)"
@@ -92,6 +94,7 @@ steps:
 
       - task: PowerShell@2
         displayName: "${{ EE }}_CheckingChangedFiles"
+        condition: eq(variables['rootFolderChangesFound'], 'Yes')
         inputs:
           targetType: 'inline'
           script: |
