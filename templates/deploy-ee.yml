@@ -77,7 +77,7 @@ steps:
             podman login -u $(AUTOMATION_HUB_USER) -p $(AUTOMATION_HUB_PASS) $(AUTOMATION_HUB_FQDN) --tls-verify=False
             podman pull $(AUTOMATION_HUB_FQDN)/${{ EE }}-$(ANSIBLE_VERSION) --tls-verify=False
             $check=echo $?
-            if ($check -eq False)
+            if ($check -eq 'False')
             {
               echo "Target ${{ EE }} not found on $(AUTOMATION_HUB_FQDN)"
               echo "This function is triggered to build EE for exec-env/${{ EE }}"
