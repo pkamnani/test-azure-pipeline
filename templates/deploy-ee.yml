@@ -86,7 +86,7 @@ steps:
             }
             else
             {
-              echo "Target ${{ EE }} found on $(AUTOMATION_HUB_FQDN). The image ${{ EE }} will not be built unless there is no config change within image templates.
+              echo "Target ${{ EE }} found on $(AUTOMATION_HUB_FQDN). The image ${{ EE }} will not be built unless there is a config change within image template.
               Write-Host "##vso[task.setvariable variable=execEnvBuild]No"
             }
 
@@ -123,22 +123,25 @@ steps:
           targetType: script
           script: |
             set -e
+            echo "Changes found in root folder = $(rootFolderChangesFound)"
+            echo "Changes found in EE configs= $(execEnvFolderChangesFound)"
+            echo -e "EE exist on PAH = $(execEnvBuild)\n"
             echo "#############################################################"
             echo "## Starting build of EE ${{ EE }} on $(AUTOMATION_HUB_FQDN)"
             echo "#############################################################"
-            podman login -u "$(CI_RHN_USER)" -p "$(CI_RHN_PASSWORD)" registry.redhat.io
-            cd exec-env/${{ EE }}
-            pwd
-            [[ ! -d ./context ]] && mkdir context
-            # cp /etc/pki/rpm-gpg/* ./context/
-            ansible-builder build --tag ${{ EE }}-$(ANSIBLE_VERSION):$(Build.SourceVersion) --container-runtime podman -v 3 --no-cache --prune-image
-            podman login -u $(AUTOMATION_HUB_USER) -p $(AUTOMATION_HUB_PASS) $(AUTOMATION_HUB_FQDN) --tls-verify=False
-            podman tag ${{ EE }}-$(ANSIBLE_VERSION):$(Build.SourceVersion) $(AUTOMATION_HUB_FQDN)/${{ EE }}-$(ANSIBLE_VERSION):$(Build.SourceVersion)
-            podman tag ${{ EE }}-$(ANSIBLE_VERSION):$(Build.SourceVersion) $(AUTOMATION_HUB_FQDN)/${{ EE }}-$(ANSIBLE_VERSION):latest
-            podman push $(AUTOMATION_HUB_FQDN)/${{ EE }}-$(ANSIBLE_VERSION):$(Build.SourceVersion) --tls-verify=False
-            podman push $(AUTOMATION_HUB_FQDN)/${{ EE }}-$(ANSIBLE_VERSION):latest --tls-verify=False
-            echo "#############################################################"
-            echo "## Performing Cleanup"
-            echo "#############################################################"
-            for i in `podman images | grep $(AUTOMATION_HUB_FQDN) | awk {'print $3'}`; do podman rmi $i -f; done || true
-            for i in `podman images | grep none | awk {'print $3'}`; do podman rmi $i -f; done || true
+            # podman login -u "$(CI_RHN_USER)" -p "$(CI_RHN_PASSWORD)" registry.redhat.io
+            # cd exec-env/${{ EE }}
+            # pwd
+            # [[ ! -d ./context ]] && mkdir context
+            # # cp /etc/pki/rpm-gpg/* ./context/
+            # ansible-builder build --tag ${{ EE }}-$(ANSIBLE_VERSION):$(Build.SourceVersion) --container-runtime podman -v 3 --no-cache --prune-image
+            # podman login -u $(AUTOMATION_HUB_USER) -p $(AUTOMATION_HUB_PASS) $(AUTOMATION_HUB_FQDN) --tls-verify=False
+            # podman tag ${{ EE }}-$(ANSIBLE_VERSION):$(Build.SourceVersion) $(AUTOMATION_HUB_FQDN)/${{ EE }}-$(ANSIBLE_VERSION):$(Build.SourceVersion)
+            # podman tag ${{ EE }}-$(ANSIBLE_VERSION):$(Build.SourceVersion) $(AUTOMATION_HUB_FQDN)/${{ EE }}-$(ANSIBLE_VERSION):latest
+            # podman push $(AUTOMATION_HUB_FQDN)/${{ EE }}-$(ANSIBLE_VERSION):$(Build.SourceVersion) --tls-verify=False
+            # podman push $(AUTOMATION_HUB_FQDN)/${{ EE }}-$(ANSIBLE_VERSION):latest --tls-verify=False
+            # echo "#############################################################"
+            # echo "## Performing Cleanup"
+            # echo "#############################################################"
+            # for i in `podman images | grep $(AUTOMATION_HUB_FQDN) | awk {'print $3'}`; do podman rmi $i -f; done || true
+            # for i in `podman images | grep none | awk {'print $3'}`; do podman rmi $i -f; done || true
