@@ -6,15 +6,9 @@ parameters:
     default:
       - ee-default
       - ee-linux
-      # - ee-aws
-      # - ee-azure
-      # - ee-windows
-      # - ee-network-cisco
       # - ee-network-juniper
-      # - ee-satellite
-      # - ee-vmware-satellite
-      # - ee-vmware
-      # - ee-solaris
+      # - ee-snow
+      # - ee-windows
 
 steps:
   - task: Bash@3
