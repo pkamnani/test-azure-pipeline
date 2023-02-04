@@ -124,8 +124,9 @@ steps:
           script: |
             set -e
             echo "Changes found in root folder = $(rootFolderChangesFound)"
-            echo "Changes found in EE configs= $(execEnvFolderChangesFound)"
-            echo -e "EE exist on PAH = $(execEnvBuild)\n"
+            echo "EE already exist on PAH = $(execEnvBuild)"
+            echo "Changes found in EE configs = $(execEnvFolderChangesFound)"
+            echo ""
             echo "#############################################################"
             echo "## Starting build of EE ${{ EE }} on $(AUTOMATION_HUB_FQDN)"
             echo "#############################################################"
