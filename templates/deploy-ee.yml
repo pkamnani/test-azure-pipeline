@@ -7,7 +7,7 @@ parameters:
       - ee-default
       - ee-linux
       - ee-network-juniper
-      - ee-snow
+      # - ee-snow
       - ee-windows
 
 steps:
