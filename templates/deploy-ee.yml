@@ -6,9 +6,9 @@ parameters:
     default:
       - ee-default
       - ee-linux
-      # - ee-network-juniper
-      # - ee-snow
-      # - ee-windows
+      - ee-network-juniper
+      - ee-snow
+      - ee-windows
 
 steps:
   - task: Bash@3
