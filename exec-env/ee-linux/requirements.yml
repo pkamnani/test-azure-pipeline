@@ -5,3 +5,6 @@ collections:
   - name: community.crypto
   - name: community.general
   - name: ansible.controller
+  - name: redhat.rhel_system_roles
+  - name: redhat.insights
+  - name: redhat_cop.ah_configuration
