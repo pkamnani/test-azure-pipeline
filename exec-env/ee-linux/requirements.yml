@@ -7,4 +7,3 @@ collections:
   - name: ansible.controller
   - name: redhat.rhel_system_roles
   - name: redhat.insights
-
