@@ -5,3 +5,4 @@ collections:
   - name: ansible.netcommon
   - name: ansible.windows
   - name: community.windows
+  - name: chocolatey.chocolatey
